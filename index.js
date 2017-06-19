@@ -1,4 +1,5 @@
 "use strict"
+require('dotenv').config();
 const Epub = require("epub-gen");
 const Crawler = require("crawler");
 const normalizeUrl = require('normalize-url');
@@ -11,6 +12,15 @@ const md5 = require('md5');
 const fs = require('fs');
 const express = require('express');
 const app = express();
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_SENDER,
+        pass: process.env.EMAIL_SENDER_PASS
+    }
+});
 
 console.time("Time taken to generate epub: ");
 
@@ -65,13 +75,29 @@ const generateEpub = (articleHTML) => {
                 if (error) 
                     throw error;
                 if (!error && response.statusCode == 200) {
-                    console.log(body);
+                    const downloadLink = body;
+                    console.log(`download link: ${downloadLink}`);
+
+                    // remove file
                     fs.unlink(epubFileLocation, err => {
                         if (err) {
                             throw err;
                         }
                         console.log(`removed: ${epubFileLocation}`)
-                    })
+                    });
+
+                    transporter.sendMail({
+                        from: 'youremail@gmail.com',
+                        to: 'jacobgoh101@gmail.com',
+                        subject: 'zai-xian-xiao-shuo--to--epub',
+                        text: `download link: ${downloadLink} \n This link will expire in 24 hours.`
+                    }, function (error, info) {
+                        if (error) {
+                            console.log(error);
+                        } else {
+                            console.log('Email sent: ' + info.response);
+                        }
+                    });
                 }
             });
         }, function (err) {
