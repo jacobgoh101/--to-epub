@@ -7,9 +7,8 @@ const sanitizeHtml = require('sanitize-html');
 const request = require('requestretry');
 const cheerio = require('cheerio');
 const iconv = require('iconv-lite');
-const fs = require('fs')
-const Log = require('log')
-const log = new Log('debug', fs.createWriteStream('my.log'));
+const md5 = require('md5');
+const fs = require('fs');
 const express = require('express');
 const app = express();
 
@@ -50,15 +49,33 @@ const generateEpub = (articleHTML) => {
         content,
         css: ""
     };
-    new Epub(option, `./${title}.epub`)
+    const epubFileName = `${title}-${md5(new Date())}.epub`;
+    const epubFileLocation = __dirname + `/${epubFileName}`;
+    new Epub(option, epubFileLocation)
         .promise
         .then(function () {
             console.log("Ebook Generated Successfully!")
             console.timeEnd("Time taken to generate epub: ");
-            process.exit();
+            request.post({
+                url: 'https://uguu.se/api.php?d=upload-tool',
+                formData: {
+                    file: fs.createReadStream(epubFileLocation)
+                }
+            }, function (error, response, body) {
+                if (error) 
+                    throw error;
+                if (!error && response.statusCode == 200) {
+                    console.log(body);
+                    fs.unlink(epubFileLocation, err => {
+                        if (err) {
+                            throw err;
+                        }
+                        console.log(`removed: ${epubFileLocation}`)
+                    })
+                }
+            });
         }, function (err) {
             console.error("Failed to generate Ebook because of ", err)
-            process.exit();
         });
 }
 
@@ -95,6 +112,7 @@ const c = new Crawler({
                             articleHTML[index] = utf8String;
                         }
                         if (Object.keys(articleHTML).length === chapterLength) {
+                            console.log(`before generateEpub. chapterLength:${chapterLength}`);
                             generateEpub(articleHTML);
                         }
                     });
@@ -106,4 +124,4 @@ const c = new Crawler({
 });
 c.queue(tableOfContentPage);
 
-app.listen(process.env.PORT||3000);
+app.listen(process.env.PORT || 3000);
