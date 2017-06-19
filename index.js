@@ -11,7 +11,7 @@ const fs = require('fs')
 const Log = require('log')
 const log = new Log('debug', fs.createWriteStream('my.log'));
 
-console.time("epub");
+console.time("Time taken to generate epub: ");
 
 const generateEpub = (articleHTML) => {
     const title = "斗罗大陆";
@@ -52,7 +52,7 @@ const generateEpub = (articleHTML) => {
         .promise
         .then(function () {
             console.log("Ebook Generated Successfully!")
-            console.timeEnd("epub");
+            console.timeEnd("Time taken to generate epub: ");
             process.exit();
         }, function (err) {
             console.error("Failed to generate Ebook because of ", err)
@@ -93,7 +93,6 @@ const c = new Crawler({
                             articleHTML[index] = utf8String;
                         }
                         if (Object.keys(articleHTML).length === chapterLength) {
-                            console.log(Object.keys(articleHTML).length);
                             generateEpub(articleHTML);
                         }
                     });
