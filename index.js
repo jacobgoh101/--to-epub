@@ -10,6 +10,8 @@ const iconv = require('iconv-lite');
 const fs = require('fs')
 const Log = require('log')
 const log = new Log('debug', fs.createWriteStream('my.log'));
+const express = require('express');
+const app = express();
 
 console.time("Time taken to generate epub: ");
 
@@ -103,3 +105,5 @@ const c = new Crawler({
     }
 });
 c.queue(tableOfContentPage);
+
+app.listen(process.env.PORT||3000);
