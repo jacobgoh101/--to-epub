@@ -7,6 +7,7 @@ const {parseContentPage} = require('../lib/parseContentPage');
 const {generateEpub} = require('../lib/generateEpub');
 const {uploadToUguuSE} = require('../lib/uploadToUguuSE');
 const {sendDownloadLink} = require('../lib/sendDownloadLink');
+const JsonResponse = require('jsonresponse');
 
 router.post('/generate', (req, res) => {
     const {
@@ -42,7 +43,11 @@ router.post('/generate', (req, res) => {
         .catch(err => {
             throw err;
         });
-    res.json(req.body);
+    res.json(new JsonResponse(null, {
+        message: "Epub parsing process has begun. You shall receive a link to download the generat" +
+                "ed EPUB once the process is completed.",
+        reqBody: req.body
+    }));
 })
 
 module.exports = router
