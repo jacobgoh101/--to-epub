@@ -15,6 +15,7 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "body-parser": "^1.17.2",
+    "charset": "^1.0.0",
     "cheerio": "^1.0.0-rc.1",
     "clean-deep": "^3.0.0",
     "cors": "^2.8.3",

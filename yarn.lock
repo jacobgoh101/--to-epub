@@ -813,6 +813,10 @@ charenc@~0.0.1:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/charenc/-/charenc-0.0.2.tgz#c0a1d2f3a7092e03774bfa83f14c0fc5790a8667"
 
+charset@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/charset/-/charset-1.0.0.tgz#19327217c249c912e964efbd47f56cc254c348d9"
+
 cheerio@^0.18.0:
   version "0.18.0"
   resolved "https://registry.yarnpkg.com/cheerio/-/cheerio-0.18.0.tgz#4e1c06377e725b740e996e0dfec353863de677fa"
