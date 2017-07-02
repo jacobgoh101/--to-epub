@@ -21,10 +21,12 @@ router.post('/generate', (req, res) => {
         chapterTitleSelector,
         chapterDataSelector,
         removeString,
-        receiverEmail
+        receiverEmail,
+        encoding,
+        ignoredUrlString
     } = req.body;
 
-    parseContentPage({contentPage, chapterLinkSelector})
+    parseContentPage({contentPage, chapterLinkSelector, encoding, ignoredUrlString})
         .then(result => result.articleHTML)
         .then(articleHTML => generateEpub({
             articleHTML,
